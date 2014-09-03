@@ -3,6 +3,9 @@
 /*
     Rich Arbitrary Precision Integer Mathematics Library for PHP
     (c) 2014, Rich Morgan
+    
+    This class is in ALPHA status and may not work correctly. Do not
+    use in a production environment!
 
 */
 
@@ -27,7 +30,7 @@ class RichArbitraryPrecisionIntegerMath
     public function __construct($test = false)
     {
 
-        if($test) {
+        if ($test) {
             $this->math_type = 'RPM';
             return;
         }
@@ -45,7 +48,7 @@ class RichArbitraryPrecisionIntegerMath
     public function mul($x, $y)
     {
 
-        switch($this->math_type) {
+        switch ($this->math_type) {
             case 'GMP':
                 return gmp_strval(gmp_mul($x, $y));
                 break;
@@ -64,7 +67,7 @@ class RichArbitraryPrecisionIntegerMath
     public function add($x, $y)
     {
 
-        switch($this->math_type) {
+        switch ($this->math_type) {
             case 'GMP':
                 return gmp_strval(gmp_add($x, $y));
                 break;
@@ -83,7 +86,7 @@ class RichArbitraryPrecisionIntegerMath
     public function sub($x, $y)
     {
 
-        switch($this->math_type) {
+        switch ($this->math_type) {
             case 'GMP':
                 return gmp_strval(gmp_sub($x, $y));
                 break;
@@ -102,7 +105,7 @@ class RichArbitraryPrecisionIntegerMath
     public function div($x, $y)
     {
 
-        switch($this->math_type) {
+        switch ($this->math_type) {
             case 'GMP':
                 return gmp_strval(gmp_div($x, $y));
                 break;
@@ -121,7 +124,7 @@ class RichArbitraryPrecisionIntegerMath
     public function mod($x, $y)
     {
 
-        switch($this->math_type) {
+        switch ($this->math_type) {
             case 'GMP':
                 return gmp_strval(gmp_mod($x, $y));
                 break;
@@ -140,7 +143,7 @@ class RichArbitraryPrecisionIntegerMath
     public function invmod($x, $y)
     {
 
-        switch($this->math_type) {
+        switch ($this->math_type) {
             case 'GMP':
                 return gmp_strval(gmp_invert($x, $y));
                 break;
@@ -159,7 +162,7 @@ class RichArbitraryPrecisionIntegerMath
     public function comp($x, $y)
     {
 
-        switch($this->math_type) {
+        switch ($this->math_type) {
             case 'GMP':
                 return gmp_strval(gmp_cmp($x, $y));
                 break;
@@ -636,7 +639,7 @@ class RichArbitraryPrecisionIntegerMath
 
         $qq=0;
 
-        while($this->rpcomp($b, $i) > 0 && $qq < 100) {
+        while ($this->rpcomp($b, $i) > 0 && $qq < 100) {
             $i = $this->rpadd($i, '1');
             $rem = $this->rpmul($rem, $a);
             $qq++;
