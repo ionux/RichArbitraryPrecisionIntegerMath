@@ -52,8 +52,6 @@ class RichArbitraryPrecisionIntegerMath
             $this->math_type = 'RPM';
             return true;
         }
-
-        return false;
     }
 
     /* public interface for multiplying two numbers */
@@ -63,13 +61,10 @@ class RichArbitraryPrecisionIntegerMath
         switch ($this->math_type) {
             case 'GMP':
                 return gmp_strval(gmp_mul($x, $y));
-                break;
             case 'BCM':
                 return bcmul($x, $y);
-                break;
             case 'RPM';
                 return $this->rpmul($x, $y);
-                break;
             default:
                 return false;
         }
@@ -83,13 +78,10 @@ class RichArbitraryPrecisionIntegerMath
         switch ($this->math_type) {
             case 'GMP':
                 return gmp_strval(gmp_add($x, $y));
-                break;
             case 'BCM':
                 return bcadd($x, $y);
-                break;
             case 'RPM';
                 return $this->rpadd($x, $y);
-                break;
             default:
                 return false;
         }
@@ -103,13 +95,10 @@ class RichArbitraryPrecisionIntegerMath
         switch ($this->math_type) {
             case 'GMP':
                 return gmp_strval(gmp_sub($x, $y));
-                break;
             case 'BCM':
                 return bcsub($x, $y);
-                break;
             case 'RPM';
                 return $this->rpsub($x, $y);
-                break;
             default:
                 return false;
             }
@@ -122,14 +111,11 @@ class RichArbitraryPrecisionIntegerMath
 
         switch ($this->math_type) {
             case 'GMP':
-                return gmp_strval(gmp_div($x, $y));
-                break;
+                return gmp_strval(gmp_div_q($x, $y, GMP_ROUND_ZERO));
             case 'BCM':
                 return bcdiv($x, $y);
-                break;
             case 'RPM';
                 return $this->rpdiv($x, $y);
-                break;
             default:
                 return false;
         }
@@ -143,13 +129,10 @@ class RichArbitraryPrecisionIntegerMath
         switch ($this->math_type) {
             case 'GMP':
                 return gmp_strval(gmp_mod($x, $y));
-                break;
             case 'BCM':
                 return bcmod($x, $y);
-                break;
             case 'RPM';
                 return $this->rpmod($x, $y);
-                break;
             default:
                 return false;
         }
@@ -163,11 +146,8 @@ class RichArbitraryPrecisionIntegerMath
         switch ($this->math_type) {
             case 'GMP':
                 return gmp_strval(gmp_invert($x, $y));
-                break;
             case 'BCM':
-                // TODO
-                return false;
-                break;
+                return bc_invert($x, $y);
             case 'RPM';
                 // TODO
                 // return $this->rpinvmod($x, $y);
@@ -185,13 +165,10 @@ class RichArbitraryPrecisionIntegerMath
         switch ($this->math_type) {
             case 'GMP':
                 return gmp_strval(gmp_cmp($x, $y));
-                break;
             case 'BCM':
                 return bccomp($x, $y);
-                break;
             case 'RPM';
                 return $this->rpcomp($x, $y);
-                break;
             default:
                 return false;
         }
@@ -205,13 +182,10 @@ class RichArbitraryPrecisionIntegerMath
         switch ($this->math_type) {
             case 'GMP':
                 return gmp_strval(gmp_pow($x, $y));
-                break;
             case 'BCM':
                 return bcpow($x, $y);
-                break;
             case 'RPM';
                 return $this->rppow($x, $y);
-                break;
             default:
                 return false;
         }
@@ -597,10 +571,8 @@ class RichArbitraryPrecisionIntegerMath
                     break;
                 case 0:
                     return array('quotient' => '1', 'remainder' => '0');
-                    break;
                 case -1:
                     return array('quotient' => '0', 'remainder' => $a);
-                    break;
                 default:
                     return false;
             }
@@ -829,6 +801,10 @@ class RichArbitraryPrecisionIntegerMath
 
     }
 
+    final private function rpmod($a, $b)
+    {
+        return bcmod($a, $b);
+    }
     /* convers a binary number string into decimal */
     final private function rpb2d($num)
     {
@@ -882,14 +858,14 @@ class RichArbitraryPrecisionIntegerMath
             } else {
                 $orighex = $hex;
                 $chars   = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
-                $hex     = $this->decodeHex($hex);
+                $hex     = gmp_init($this->decodeHex($hex));
                 $result  = '';
 
                 switch ($this->math_type) {
                     case 'GMP':
                         while (gmp_cmp($hex, 0) > 0) {
-                            $dv     = gmp_div_q($hex, '58');
-                            $rem    = gmp_strval(gmp_div_r($hex, '58'));
+                            $dv     = gmp_div_q($hex, '58', GMP_ROUND_ZERO);
+                            $rem    = gmp_strval(gmp_div_r($hex, '58', GMP_ROUND_ZERO));
                             $hex    = $dv;
                             $result = $result . $chars[$rem];
                         }
@@ -1078,6 +1054,7 @@ class RichArbitraryPrecisionIntegerMath
 
             $chars  = '0123456789ABCDEF';
             $result = '';
+            $dec = gmp_init($dec);
 
             $i = 0;
 
@@ -1085,8 +1062,8 @@ class RichArbitraryPrecisionIntegerMath
                 case 'GMP':
                     while (gmp_cmp($dec, 0) > 0) {
                         $i++;
-                        $dv  = gmp_div_q($dec, '16');
-                        $rem = gmp_strval(gmp_div_r($dec, '16'));
+                        $dv  = gmp_div_q($dec, '16', GMP_ROUND_ZERO);
+                        $rem = gmp_strval(gmp_div_r($dec, '16', GMP_ROUND_ZERO));
                         $dec = $dv;
                         $result = $result . $chars[$rem];
                     }
@@ -1112,6 +1089,8 @@ class RichArbitraryPrecisionIntegerMath
     /* converts hex value into byte array */
     final public function binconv($hex) {
 
+        digits = array();
+
         try {
 
             for ($x=0; $x<256; $x++) {
@@ -1121,12 +1100,11 @@ class RichArbitraryPrecisionIntegerMath
             $dec  = self::add0x($hex);
 
             $byte = '';
-            $seq  = '';
 
             switch ($this->math_type) {
                 case 'GMP':
                     while (gmp_cmp($dec, '0') > 0) {
-                        $dv   = gmp_div($dec, '256');
+                        $dv   = gmp_div_q($dec, '256', GMP_ROUND_ZERO);
                         $rem  = gmp_strval(gmp_mod($dec, '256'));
                         $dec  = $dv;
                         $byte = $byte . $digits[$rem];
@@ -1146,10 +1124,92 @@ class RichArbitraryPrecisionIntegerMath
 
             return $byte;
 
-        } catch (Exception $e) {
-            return 'Error in binconv(): ' . $e->getMessage();
+        } catch (\Exception $e) {
+            throw $e;
         }
 
+    }
+
+    /**    
+     * Binary Calculator implementation of GMP's inverse
+     * modulo function, where ax = 1(mod p).
+     *
+     * @param  string $num The number to inverse modulo.
+     * @param  string $mod The modulus.
+     * @return string $a   The result.
+     */
+    public function bc_invert($number, $modulus)
+    {
+        if (!$this->coprime($number, $modulus)) {
+            return '0';
+        }
+
+        $a = '1';
+        $b = '0';
+        $z = '0';
+        $c = '0';
+
+        $mod = $modulus;
+        $num = $number;
+
+        do {
+            $z = bcmod($num, $mod);
+            $c = bcdiv($num, $mod);
+
+            $mod = $z;
+
+            $z = bcsub($a, bcmul($b, $c));
+
+            $num = $mod;
+            $a = $b;
+            $b = $z;
+        } while (bccomp($mod, '0') > 0);
+
+        if (bccomp($a, '0') < 0) {
+            $a = bcadd($a, $modulus);
+        }
+
+        return (string)$a;
+    }
+
+    /**
+     * Determines if two numbers are co-prime
+     * using the Euclidean algorithm.
+     * 
+     * @param string $a The first number to compare.
+     * @prarm string $b The second number to compare.
+     * @return bool     The result of the determination.
+     */
+    function coprime($a, $b)
+    {
+        $small = 0;
+        $diff  = 0;
+
+        while (bccomp($a, '0') > 0 && bccomp($b, '0') > 0) {
+            if (bccomp($a, $b) == -1) {
+                $small = $a;
+                $diff  = bcmod($b, $a);
+            }
+
+            if (bccomp($a, $b) == 1) {
+                $small = $b;
+                $diff = bcmod($a, $b);
+            }
+
+            if (bccomp($a, $b) == 0) {
+                $small = $a;
+                $diff  = bcmod($b, $a); 
+            }
+
+            $a = $small;
+            $b = $diff;
+        }
+
+        if (bccomp($a, '1') == 0) {
+            return 'true' . "\r\n";
+        }
+
+        return 'false' . "\r\n";
     }
 
 }
