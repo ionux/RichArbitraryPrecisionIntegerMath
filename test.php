@@ -12,54 +12,58 @@ for ($qq=0; $qq < $number_of_loops; $qq++) {
         $digit_length = strlen($x);
 
         // Division
-        $myans = $math->div($x,$y);
-        $gmpans = gmp_strval(gmp_div($x,$y));
+        $myans = $math->div($x, $y);
+        $gmpans = gmp_strval(gmp_div(gmp_init($x), gmp_init($y), GMP_ROUND_ZERO));
 
         echo '<pre>Digit size: ' . $digit_length . "\r\n\r\n" . 'MY ans:  ' . $myans['quotient'];
 
         echo "\r\nGMP ans: " . $gmpans;
 
-        if ($myans['quotient'] != $gmpans)
+        if ($myans['quotient'] != $gmpans) {
                 echo " - ERROR!!!!\r\n</pre>";
-        else
+        } else {
             	echo " - ok\r\n</pre>";
+        }
 
         // Multiplication
-        $myans = $math->mul($x,$y);
-        $gmpans = gmp_strval(gmp_mul($x,$y));
+        $myans = $math->mul($x, $y);
+        $gmpans = gmp_strval(gmp_mul(gmp_init($x), gmp_init($y)));
 
         echo '<pre>Digit size: ' . $digit_length . "\r\n\r\n" . 'MY ans:  ' . $myans;
 
         echo "\r\nGMP ans: " . $gmpans;
 
-        if ($myans != $gmpans)
+        if ($myans != $gmpans) {
                 echo " - ERROR!!!!\r\n</pre>";
-        else
+        } else {
             	echo " -ok\r\n</pre>";
+        }
 
         // Addition
-        $myans = $math->add($x,$y);
-        $gmpans = gmp_strval(gmp_add($x,$y));
+        $myans = $math->add($x, $y);
+        $gmpans = gmp_strval(gmp_add(gmp_init($x), gmp_init($y)));
 
         echo '<pre>Digit size: ' . $digit_length . "\r\n\r\n" . 'MY ans:  ' . $myans;
 
         echo "\r\nGMP ans: " . $gmpans;
 
-        if ($myans != $gmpans)
+        if ($myans != $gmpans) {
                 echo " - ERROR!!!!\r\n</pre>";
-        else
+        } else {
             	echo " -ok\r\n</pre>";
+        }
 
         // Subtraction
-        $myans = $math->sub($x,$y);
-        $gmpans = gmp_strval(gmp_sub($x,$y));
+        $myans = $math->sub($x, $y);
+        $gmpans = gmp_strval(gmp_sub(gmp_init($x), gmp_init($y)));
 
         echo '<pre>Digit size: ' . $digit_length . "\r\n\r\n" . 'MY ans:  ' . $myans;
 
         echo "\r\nGMP ans: " . $gmpans;
 
-        if ($myans != $gmpans)
+        if ($myans != $gmpans) {
                 echo " - ERROR!!!!\r\n</pre>";
-        else
+        } else {
             	echo " -ok\r\n</pre>";
+        }
 }
