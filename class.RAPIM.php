@@ -904,7 +904,7 @@ class RichArbitraryPrecisionIntegerMath
             return $result;
 
         } catch (\Exception $e) {
-            throw $e
+            throw $e;
         }
 
     }
@@ -960,7 +960,7 @@ class RichArbitraryPrecisionIntegerMath
             return $result;
 
         } catch (\Exception $e) {
-            return 'Error in decodeBase58(): ' . $e->getMessage();
+            throw $e;
         }
 
     }
