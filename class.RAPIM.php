@@ -1089,7 +1089,7 @@ class RichArbitraryPrecisionIntegerMath
     /* converts hex value into byte array */
     final public function binconv($hex) {
 
-        digits = array();
+        $digits = array();
 
         try {
 
