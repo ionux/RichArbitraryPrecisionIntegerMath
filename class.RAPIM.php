@@ -177,7 +177,7 @@ class RichArbitraryPrecisionIntegerMath
 
         switch ($this->math_type) {
             case 'GMP':
-                return gmp_strval(gmp_cmp(gmp_init($x), gmp_init($y)));
+                return gmp_cmp(gmp_init($x), gmp_init($y));
             case 'BCM':
                 return bccomp($x, $y);
             case 'RPM';
@@ -194,7 +194,7 @@ class RichArbitraryPrecisionIntegerMath
 
         switch ($this->math_type) {
             case 'GMP':
-                return gmp_strval(gmp_pow(gmp_init($x), gmp_init($y)));
+                return gmp_strval(gmp_pow(gmp_init($x), (int)$y));
             case 'BCM':
                 return bcpow($x, $y);
             case 'RPM';
