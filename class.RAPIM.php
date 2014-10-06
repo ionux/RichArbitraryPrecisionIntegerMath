@@ -1014,6 +1014,10 @@ class RichArbitraryPrecisionIntegerMath
     }
 
     /* decodes a hex number into decimal */
+
+    /**
+     * @param string $hex
+     */
     final public function decodeHex($hex)
     {
 
@@ -1060,6 +1064,10 @@ class RichArbitraryPrecisionIntegerMath
     }
 
     /* encodes a decimal number as hex */
+
+    /**
+     * @param string $dec
+     */
     final public function encodeHex($dec)
     {
 
@@ -1147,8 +1155,6 @@ class RichArbitraryPrecisionIntegerMath
      * Binary Calculator implementation of GMP's inverse
      * modulo function, where ax = 1(mod p).
      *
-     * @param  string $num The number to inverse modulo.
-     * @param  string $mod The modulus.
      * @return string $a   The result.
      */
     public function bc_invert($number, $modulus)
@@ -1191,7 +1197,7 @@ class RichArbitraryPrecisionIntegerMath
      * 
      * @param string $a The first number to compare.
      * @prarm string $b The second number to compare.
-     * @return bool     The result of the determination.
+     * @return string     The result of the determination.
      */
     function coprime($a, $b)
     {
