@@ -27,10 +27,19 @@ class RichArbitraryPrecisionIntegerMath
     private $math_type     = '';
     private $test          = false;
     private $maxint        = 0;
+    private $digits        = array();
+    private $gmpZero       = '0';
+    private $gmpSixteen    = '16';
+    private $gmpFiveEight  = '58';
+    private $gmpTwoFiveSix = '256';
 
     /* public constructor method to initialize important class properties */
     public function __construct($test = false)
     {
+        for ($x = 0; $x < 256; $x++) {
+                $this->digits[$x] = chr($x);
+            }
+
         if (PHP_INT_SIZE > 4) {
             $this->maxint = 10;
         } else {
@@ -43,6 +52,10 @@ class RichArbitraryPrecisionIntegerMath
         }
 
         if (function_exists('gmp_add')) {
+            $this->gmpZero = gmp_init($this->gmpZero);
+            $this->gmpSixteen = gmp_init($this->gmpSixteen);
+            $this->gmpFiveEight = gmp_init($this->gmpFiveEight);
+            $this->gmpTwoFiveSix = gmp_init($this->gmpTwoFiveSix);
             $this->math_type = 'GMP';
             return true;
         } else if (function_exists('bcadd')) {
@@ -60,7 +73,7 @@ class RichArbitraryPrecisionIntegerMath
 
         switch ($this->math_type) {
             case 'GMP':
-                return gmp_strval(gmp_mul($x, $y));
+                return gmp_strval(gmp_mul(gmp_init($x), gmp_init($y)));
             case 'BCM':
                 return bcmul($x, $y);
             case 'RPM';
@@ -77,7 +90,7 @@ class RichArbitraryPrecisionIntegerMath
 
         switch ($this->math_type) {
             case 'GMP':
-                return gmp_strval(gmp_add($x, $y));
+                return gmp_strval(gmp_add(gmp_init($x), gmp_init($y)));
             case 'BCM':
                 return bcadd($x, $y);
             case 'RPM';
@@ -94,7 +107,7 @@ class RichArbitraryPrecisionIntegerMath
 
         switch ($this->math_type) {
             case 'GMP':
-                return gmp_strval(gmp_sub($x, $y));
+                return gmp_strval(gmp_sub(gmp_init($x), gmp_init($y)));
             case 'BCM':
                 return bcsub($x, $y);
             case 'RPM';
@@ -111,7 +124,7 @@ class RichArbitraryPrecisionIntegerMath
 
         switch ($this->math_type) {
             case 'GMP':
-                return gmp_strval(gmp_div_q($x, $y, GMP_ROUND_ZERO));
+                return gmp_strval(gmp_div_q(gmp_init($x), gmp_init($y), GMP_ROUND_ZERO));
             case 'BCM':
                 return bcdiv($x, $y);
             case 'RPM';
@@ -128,7 +141,7 @@ class RichArbitraryPrecisionIntegerMath
 
         switch ($this->math_type) {
             case 'GMP':
-                return gmp_strval(gmp_mod($x, $y));
+                return gmp_strval(gmp_mod(gmp_init($x), gmp_init($y)));
             case 'BCM':
                 return bcmod($x, $y);
             case 'RPM';
@@ -145,7 +158,7 @@ class RichArbitraryPrecisionIntegerMath
 
         switch ($this->math_type) {
             case 'GMP':
-                return gmp_strval(gmp_invert($x, $y));
+                return gmp_strval(gmp_invert(gmp_init($x), gmp_init($y)));
             case 'BCM':
                 return bc_invert($x, $y);
             case 'RPM';
@@ -164,7 +177,7 @@ class RichArbitraryPrecisionIntegerMath
 
         switch ($this->math_type) {
             case 'GMP':
-                return gmp_strval(gmp_cmp($x, $y));
+                return gmp_strval(gmp_cmp(gmp_init($x), gmp_init($y)));
             case 'BCM':
                 return bccomp($x, $y);
             case 'RPM';
@@ -181,7 +194,7 @@ class RichArbitraryPrecisionIntegerMath
 
         switch ($this->math_type) {
             case 'GMP':
-                return gmp_strval(gmp_pow($x, $y));
+                return gmp_strval(gmp_pow(gmp_init($x), gmp_init($y)));
             case 'BCM':
                 return bcpow($x, $y);
             case 'RPM';
@@ -252,8 +265,8 @@ class RichArbitraryPrecisionIntegerMath
 
             return $this->rpadd($a, $this->rpadd($d, $e));
 
-        } catch (Exception $e) {
-            return $e->getMessage();
+        } catch (\Exception $e) {
+            throw $e;
         }
 
     }
@@ -362,8 +375,8 @@ class RichArbitraryPrecisionIntegerMath
 
             return $number_string;
 
-        } catch (Exception $e) {
-            return $e->getMessage();
+        } catch (\Exception $e) {
+            throw $e;
         }
 
     }
@@ -524,8 +537,8 @@ class RichArbitraryPrecisionIntegerMath
 
             return $sign . $result_a;
 
-        } catch (Exception $e) {
-            return $e->getMessage();
+        } catch (\Exception $e) {
+            throw $e;
         }
 
     }
@@ -661,8 +674,8 @@ class RichArbitraryPrecisionIntegerMath
 
             return array('quotient' => $quotient, 'remainder' => $rem);
 
-        } catch (Exception $e) {
-            return $e->getMessage();
+        } catch (\Exception $e) {
+            throw $e;
         }
 
     }
@@ -706,8 +719,8 @@ class RichArbitraryPrecisionIntegerMath
                 return $result;
             }
 
-        } catch (Exception $e) {
-            return 'Error in rppow: ' . $e->getMessage();
+        } catch (\Exception $e) {
+            throw $e;
         }
 
     }
@@ -764,8 +777,8 @@ class RichArbitraryPrecisionIntegerMath
 
             return 0;
 
-        } catch (Exception $e) {
-            return 'Error in rpcomp: ' . $e->getMessage();
+        } catch (\Exception $e) {
+            throw $e;
         }
 
     }
@@ -795,8 +808,8 @@ class RichArbitraryPrecisionIntegerMath
 
             return strrev($bin);
 
-        } catch (Exception $e) {
-            return 'Error in rpd2b: ' . $e->getMessage();
+        } catch (\Exception $e) {
+            throw $e;
         }
 
     }
@@ -833,8 +846,8 @@ class RichArbitraryPrecisionIntegerMath
 
             return $dec;
 
-        } catch (Exception $e) {
-            return 'Error in rpb2d(): ' . $e->getMessage();
+        } catch (\Exception $e) {
+            throw $e;
         }
 
     }
@@ -858,14 +871,15 @@ class RichArbitraryPrecisionIntegerMath
             } else {
                 $orighex = $hex;
                 $chars   = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
-                $hex     = gmp_init($this->decodeHex($hex));
+                $hex     = $this->decodeHex($hex);
                 $result  = '';
 
                 switch ($this->math_type) {
                     case 'GMP':
-                        while (gmp_cmp($hex, 0) > 0) {
-                            $dv     = gmp_div_q($hex, '58', GMP_ROUND_ZERO);
-                            $rem    = gmp_strval(gmp_div_r($hex, '58', GMP_ROUND_ZERO));
+                        $hex = gmp_init($hex);
+                        while (gmp_cmp($hex, $this->gmpZero) > 0) {
+                            $dv     = gmp_div_q($hex, $this->gmpFiveEight, GMP_ROUND_ZERO);
+                            $rem    = gmp_strval(gmp_div_r($hex, $this->gmpFiveEight, GMP_ROUND_ZERO));
                             $hex    = $dv;
                             $result = $result . $chars[$rem];
                         }
@@ -882,15 +896,15 @@ class RichArbitraryPrecisionIntegerMath
 
                 $result = strrev($result);
 
-                for ($i=0; $i < strlen($orighex) && substr($orighex, $i, 2) == '00'; $i += 2) {
+                for ($i =0 ; $i < strlen($orighex) && substr($orighex, $i, 2) == '00'; $i += 2) {
                     $result = '1' . $result;
                 }
             }
 
             return $result;
 
-        } catch (Exception $e) {
-            return 'Error in encodeBase58(): ' . $e->getMessage();
+        } catch (\Exception $e) {
+            throw $e
         }
 
     }
@@ -917,7 +931,9 @@ class RichArbitraryPrecisionIntegerMath
 
                 switch ($this->math_type) {
                     case 'GMP':
-                        $result = gmp_mul($result, '58');
+                        $result     = gmp_init($result);
+                        $current    = gmp_init($current);
+                        $result = gmp_mul($result, $this->gmpFiveEight);
                         $result = gmp_strval(gmp_add($result, $current));
                         break;
                     case 'BCM':
@@ -943,7 +959,7 @@ class RichArbitraryPrecisionIntegerMath
 
             return $result;
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return 'Error in decodeBase58(): ' . $e->getMessage();
         }
 
@@ -967,8 +983,8 @@ class RichArbitraryPrecisionIntegerMath
 
             return $string;
 
-        } catch (Exception $e) {
-            return 'Error in remove0x(): ' . $e->getMessage();
+        } catch (\Exception $e) {
+            throw $e;
         }
 
     }
@@ -991,8 +1007,8 @@ class RichArbitraryPrecisionIntegerMath
 
             return $string;
 
-        } catch (Exception $e) {
-            return 'Error in remove0x(): ' . $e->getMessage();
+        } catch (\Exception $e) {
+            throw $e;
         }
 
     }
@@ -1018,8 +1034,11 @@ class RichArbitraryPrecisionIntegerMath
 
                 switch ($this->math_type) {
                     case 'GMP':
-                        $result = gmp_mul($result, '16');
-                        $result = gmp_strval(gmp_add($result, $current));
+                        $result  = gmp_init($result);
+                        $sixteen = gmp_init('16');
+                        $current = gmp_init($current);
+                        $result  = gmp_mul($result, $sixteen);
+                        $result  = gmp_strval(gmp_add($result, $current));
                         break;
                     case 'BCM':
                         // TODO
@@ -1034,8 +1053,8 @@ class RichArbitraryPrecisionIntegerMath
 
             return $result;
 
-        } catch (Exception $e) {
-            return 'Error in decodeHex(): ' . $e->getMessage();
+        } catch (\Exception $e) {
+            throw $e;
         }
 
     }
@@ -1054,16 +1073,16 @@ class RichArbitraryPrecisionIntegerMath
 
             $chars  = '0123456789ABCDEF';
             $result = '';
-            $dec = gmp_init($dec);
 
             $i = 0;
 
             switch ($this->math_type) {
                 case 'GMP':
-                    while (gmp_cmp($dec, 0) > 0) {
+                    $dec = gmp_init($dec);
+                    while (gmp_cmp($dec, $this->gmpZero) > 0) {
                         $i++;
-                        $dv  = gmp_div_q($dec, '16', GMP_ROUND_ZERO);
-                        $rem = gmp_strval(gmp_div_r($dec, '16', GMP_ROUND_ZERO));
+                        $dv  = gmp_div_q($dec, $this->gmpSixteen, GMP_ROUND_ZERO);
+                        $rem = gmp_strval(gmp_div_r($dec, $this->gmpSixteen, GMP_ROUND_ZERO));
                         $dec = $dv;
                         $result = $result . $chars[$rem];
                     }
@@ -1080,8 +1099,8 @@ class RichArbitraryPrecisionIntegerMath
 
             return strrev($result);
 
-        } catch (Exception $e) {
-            return 'Error in encodeHex(): ' . $e->getMessage();
+        } catch (\Exception $e) {
+            throw $e;
         }
 
     }
@@ -1089,25 +1108,19 @@ class RichArbitraryPrecisionIntegerMath
     /* converts hex value into byte array */
     final public function binconv($hex) {
 
-        $digits = array();
-
         try {
 
-            for ($x=0; $x<256; $x++) {
-                $digits[$x] = chr($x);
-            }
-
             $dec  = self::add0x($hex);
-
             $byte = '';
 
             switch ($this->math_type) {
                 case 'GMP':
-                    while (gmp_cmp($dec, '0') > 0) {
-                        $dv   = gmp_div_q($dec, '256', GMP_ROUND_ZERO);
-                        $rem  = gmp_strval(gmp_mod($dec, '256'));
+                    $dec = gmp_init($dec);
+                    while (gmp_cmp($dec, $this->gmpZero) > 0) {
+                        $dv   = gmp_div_q($dec, $this->gmpTwoFiveSix, GMP_ROUND_ZERO);
+                        $rem  = gmp_strval(gmp_mod($dec, $this->gmpTwoFiveSix));
                         $dec  = $dv;
-                        $byte = $byte . $digits[$rem];
+                        $byte = $byte . $this->digits[$rem];
                     }
                     break;
                 case 'BCM':
