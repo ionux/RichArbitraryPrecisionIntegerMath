@@ -28,10 +28,10 @@ class RichArbitraryPrecisionIntegerMath
     private $test          = false;
     private $maxint        = 0;
     private $digits        = array();
-    private $gmpZero;
-    private $gmpSixteen;
-    private $gmpFiveEight;
-    private $gmpTwoFiveSix;
+    private $gmpZero       = 0;
+    private $gmpSixteen    = 16;
+    private $gmpFiveEight  = 58;
+    private $gmpTwoFiveSix = 256;
 
     /* public constructor method to initialize important class properties */
     public function __construct($test = false)
