@@ -1,18 +1,15 @@
 <?php
-
-/*
-    Rich Arbitrary Precision Integer Mathematics Library for PHP
-    (c) 2014, Rich Morgan
-
-    This class is in ALPHA status and may not work correctly. Do not
-    use in a production environment!
-
-*/
+/**
+ *   Rich Arbitrary Precision Integer Mathematics Library for PHP
+ *   (c) 2014-2015, Rich Morgan <rich@richmorgan.me>
+ *
+ *   This class is in ALPHA status and may not work correctly. Do not
+ *   use in a production environment!
+ */
 
 
 class RichArbitraryPrecisionIntegerMath
 {
-
     private $internal      = false;
     private $a_orig_size   = 0;
     private $b_orig_size   = 0;
@@ -33,12 +30,16 @@ class RichArbitraryPrecisionIntegerMath
     private $gmpFiveEight  = 58;
     private $gmpTwoFiveSix = 256;
 
-    /* public constructor method to initialize important class properties */
+    /**
+     * Public constructor method to initialize class properties
+     *
+     * @param bool $test
+     */
     public function __construct($test = false)
     {
         for ($x = 0; $x < 256; $x++) {
-                $this->digits[$x] = chr($x);
-            }
+            $this->digits[$x] = chr($x);
+        }
 
         if (PHP_INT_SIZE > 4) {
             $this->maxint = 10;
@@ -51,26 +52,37 @@ class RichArbitraryPrecisionIntegerMath
             return true;
         }
 
-        if (function_exists('gmp_add')) {
-            $this->gmpZero = gmp_init($this->gmpZero);
-            $this->gmpSixteen = gmp_init($this->gmpSixteen);
-            $this->gmpFiveEight = gmp_init($this->gmpFiveEight);
+        if (true === function_exists('gmp_add')) {
+            // GMP is preferred for speed
+            $this->gmpZero       = gmp_init($this->gmpZero);
+            $this->gmpSixteen    = gmp_init($this->gmpSixteen);
+            $this->gmpFiveEight  = gmp_init($this->gmpFiveEight);
             $this->gmpTwoFiveSix = gmp_init($this->gmpTwoFiveSix);
+
             $this->math_type = 'GMP';
+
             return true;
-        } else if (function_exists('bcadd')) {
+        } else if (true === function_exists('bcadd')) {
+            // BC is second choice
             $this->math_type = 'BCM';
+
             return true;
         } else {
+            // Fallback to library functions
             $this->math_type = 'RPM';
+
             return true;
         }
     }
 
-    /* public interface for multiplying two numbers */
+    /**
+     * Public method for multiplying two numbers
+     *
+     * @param string $x The first number
+     * @param string $x The second number
+     */
     public function mul($x, $y)
     {
-
         switch ($this->math_type) {
             case 'GMP':
                 return gmp_strval(gmp_mul(gmp_init($x), gmp_init($y)));
@@ -81,13 +93,16 @@ class RichArbitraryPrecisionIntegerMath
             default:
                 return false;
         }
-
     }
 
-    /* public interface for adding two numbers */
+    /**
+     * Public method for multiplying two numbers
+     *
+     * @param string $x The first number
+     * @param string $x The second number
+     */
     public function add($x, $y)
     {
-
         switch ($this->math_type) {
             case 'GMP':
                 return gmp_strval(gmp_add(gmp_init($x), gmp_init($y)));
@@ -98,13 +113,16 @@ class RichArbitraryPrecisionIntegerMath
             default:
                 return false;
         }
-
     }
 
-    /* public interface for subtracting two numbers */
+    /**
+     * Public method for multiplying two numbers
+     *
+     * @param string $x The first number
+     * @param string $x The second number
+     */
     public function sub($x, $y)
     {
-
         switch ($this->math_type) {
             case 'GMP':
                 return gmp_strval(gmp_sub(gmp_init($x), gmp_init($y)));
@@ -114,14 +132,17 @@ class RichArbitraryPrecisionIntegerMath
                 return $this->rpsub($x, $y);
             default:
                 return false;
-            }
-
+        }
     }
 
-    /* public interface for dividing two numbers */
+    /**
+     * Public method for multiplying two numbers
+     *
+     * @param string $x The first number
+     * @param string $x The second number
+     */
     public function div($x, $y)
     {
-
         switch ($this->math_type) {
             case 'GMP':
                 return gmp_strval(gmp_div_q(gmp_init($x), gmp_init($y), GMP_ROUND_ZERO));
@@ -132,13 +153,16 @@ class RichArbitraryPrecisionIntegerMath
             default:
                 return false;
         }
-
     }
 
-    /* public interface for calculating 'x' modulo 'b' */
+    /**
+     * Public method for calculating 'x' modulo 'b'
+     *
+     * @param string $x The first number
+     * @param string $x The second number
+     */
     public function mod($x, $y)
     {
-
         switch ($this->math_type) {
             case 'GMP':
                 return gmp_strval(gmp_mod(gmp_init($x), gmp_init($y)));
@@ -149,13 +173,16 @@ class RichArbitraryPrecisionIntegerMath
             default:
                 return false;
         }
-
     }
 
-    /* public interface for calculating the inverse modulo */
+    /**
+     * Public method for calculating the inverse modulo
+     *
+     * @param string $x The first number
+     * @param string $x The second number
+     */
     public function invmod($x, $y)
     {
-
         switch ($this->math_type) {
             case 'GMP':
                 return gmp_strval(gmp_invert(gmp_init($x), gmp_init($y)));
@@ -168,13 +195,16 @@ class RichArbitraryPrecisionIntegerMath
             default:
                 return false;
         }
-
     }
 
-    /* public interface for comparing two numbers */
+    /**
+     * Public method for comparing two numbers
+     *
+     * @param string $x The first number
+     * @param string $x The second number
+     */
     public function comp($x, $y)
     {
-
         switch ($this->math_type) {
             case 'GMP':
                 return gmp_cmp(gmp_init($x), gmp_init($y));
@@ -185,13 +215,16 @@ class RichArbitraryPrecisionIntegerMath
             default:
                 return false;
         }
-
     }
 
-    /* public interface for raising a number to a power */
+    /**
+     * Public method for raising a number to a power
+     *
+     * @param string $x The first number
+     * @param string $x The second number
+     */
     public function power($x, $y)
     {
-
         switch ($this->math_type) {
             case 'GMP':
                 return gmp_strval(gmp_pow(gmp_init($x), (int)$y));
@@ -202,13 +235,16 @@ class RichArbitraryPrecisionIntegerMath
             default:
                 return false;
         }
-
     }
 
-    /* multiplies a number 'a' by a number 'b' */
+   /**
+     * Library implementation for multiplying two numbers
+     *
+     * @param string $x The first number
+     * @param string $x The second number
+     */
     final private function rpmul($x, $y)
     {
-
         try {
 
             settype($x, 'string');
@@ -271,10 +307,14 @@ class RichArbitraryPrecisionIntegerMath
 
     }
 
-    /* adds a number 'a' by a number 'b' */
+    /**
+     * Library implementation for multiplying two numbers
+     *
+     * @param string $x The first number
+     * @param string $x The second number
+     */
     final private function rpadd($a, $b)
     {
-
         try {
 
             settype($a, 'string');
@@ -378,13 +418,16 @@ class RichArbitraryPrecisionIntegerMath
         } catch (\Exception $e) {
             throw $e;
         }
-
     }
 
-    /* subtracts a number 'a' by a number 'b' */
+    /**
+     * Library implementation for multiplying two numbers
+     *
+     * @param string $x The first number
+     * @param string $x The second number
+     */
     final private function rpsub($a, $b)
     {
-
         try {
 
             settype($a, 'string');
@@ -540,13 +583,16 @@ class RichArbitraryPrecisionIntegerMath
         } catch (\Exception $e) {
             throw $e;
         }
-
     }
 
-    /* divides a number 'a' by a number 'b' */
+    /**
+     * Library implementation for multiplying two numbers
+     *
+     * @param string $x The first number
+     * @param string $x The second number
+     */
     final private function rpdiv($a, $b)
     {
-
         try {
 
             settype($a, 'string');
@@ -677,13 +723,16 @@ class RichArbitraryPrecisionIntegerMath
         } catch (\Exception $e) {
             throw $e;
         }
-
     }
 
-    /* raises a number 'a' to a power 'b' */
+    /**
+     * Library implementation for multiplying two numbers
+     *
+     * @param string $x The first number
+     * @param string $x The second number
+     */
     final private function rppow($a, $b)
     {
-
         try {
 
             settype($a, 'string');
@@ -722,13 +771,17 @@ class RichArbitraryPrecisionIntegerMath
         } catch (\Exception $e) {
             throw $e;
         }
-
     }
 
+   /**
+     * Library implementation for multiplying two numbers
+     *
+     * @param string $x The first number
+     * @param string $x The second number
+     */
     /* compares two numbers and returns 1 if a>b, 0 if a=b, -1 if a<b */
     final private function rpcomp($a, $b)
     {
-
         try {
 
             settype($a, 'string');
@@ -780,13 +833,17 @@ class RichArbitraryPrecisionIntegerMath
         } catch (\Exception $e) {
             throw $e;
         }
-
     }
 
+    /**
+     * Library implementation for multiplying two numbers
+     *
+     * @param string $x The first number
+     * @param string $x The second number
+     */
     /* convers a decimal number into a binary number string */
     final private function rpd2b($num)
     {
-
         try {
 
             if (trim($num) == '' || empty($num)) {
@@ -811,17 +868,28 @@ class RichArbitraryPrecisionIntegerMath
         } catch (\Exception $e) {
             throw $e;
         }
-
     }
 
+    /**
+     * Library implementation for multiplying two numbers
+     *
+     * @param string $x The first number
+     * @param string $x The second number
+     */
     final private function rpmod($a, $b)
     {
         return bcmod($a, $b);
     }
+
+    /**
+     * Library implementation for multiplying two numbers
+     *
+     * @param string $x The first number
+     * @param string $x The second number
+     */
     /* convers a binary number string into decimal */
     final private function rpb2d($num)
     {
-
         try {
 
             settype($num, 'string');
@@ -849,13 +917,17 @@ class RichArbitraryPrecisionIntegerMath
         } catch (\Exception $e) {
             throw $e;
         }
-
     }
 
+    /**
+     * Library implementation for multiplying two numbers
+     *
+     * @param string $x The first number
+     * @param string $x The second number
+     */
     /* encodes a hex number string into Base-58 */
     final public function encodeBase58($hex)
     {
-
         try {
 
             settype($hex, 'string');
@@ -906,13 +978,17 @@ class RichArbitraryPrecisionIntegerMath
         } catch (\Exception $e) {
             throw $e;
         }
-
     }
 
+    /**
+     * Library implementation for multiplying two numbers
+     *
+     * @param string $x The first number
+     * @param string $x The second number
+     */
     /* decodes a Base-58 encoded value */
     final public function decodeBase58($base58)
     {
-
         try {
 
             settype($base58, 'string');
@@ -962,13 +1038,17 @@ class RichArbitraryPrecisionIntegerMath
         } catch (\Exception $e) {
             throw $e;
         }
-
     }
 
+    /**
+     * Library implementation for multiplying two numbers
+     *
+     * @param string $x The first number
+     * @param string $x The second number
+     */
     /*  removes an '0x' from a number string if it's present */
     final private function remove0x($string)
     {
-
         try {
 
             settype($string, 'string');
@@ -986,13 +1066,17 @@ class RichArbitraryPrecisionIntegerMath
         } catch (\Exception $e) {
             throw $e;
         }
-
     }
 
+    /**
+     * Library implementation for multiplying two numbers
+     *
+     * @param string $x The first number
+     * @param string $x The second number
+     */
     /* appends an '0x' to a hex number string if it's missing */
     final private function add0x($string)
     {
-
         try {
 
             settype($string, 'string');
@@ -1010,17 +1094,20 @@ class RichArbitraryPrecisionIntegerMath
         } catch (\Exception $e) {
             throw $e;
         }
-
     }
 
+    /**
+     * Library implementation for multiplying two numbers
+     *
+     * @param string $x The first number
+     * @param string $x The second number
+     */
     /* decodes a hex number into decimal */
-
     /**
      * @param string $hex
      */
     final public function decodeHex($hex)
     {
-
         try {
 
             settype($hex, 'string');
@@ -1060,17 +1147,20 @@ class RichArbitraryPrecisionIntegerMath
         } catch (\Exception $e) {
             throw $e;
         }
-
     }
 
+    /**
+     * Library implementation for multiplying two numbers
+     *
+     * @param string $x The first number
+     * @param string $x The second number
+     */
     /* encodes a decimal number as hex */
-
     /**
      * @param string $dec
      */
     final public function encodeHex($dec)
     {
-
         try {
 
             settype($dec, 'string');
@@ -1110,12 +1200,17 @@ class RichArbitraryPrecisionIntegerMath
         } catch (\Exception $e) {
             throw $e;
         }
-
     }
 
+    /**
+     * Library implementation for multiplying two numbers
+     *
+     * @param string $x The first number
+     * @param string $x The second number
+     */
     /* converts hex value into byte array */
-    final public function binconv($hex) {
-
+    final public function binconv($hex)
+    {
         try {
 
             $dec  = self::add0x($hex);
@@ -1148,7 +1243,6 @@ class RichArbitraryPrecisionIntegerMath
         } catch (\Exception $e) {
             throw $e;
         }
-
     }
 
     /**    
@@ -1195,8 +1289,8 @@ class RichArbitraryPrecisionIntegerMath
      * Determines if two numbers are co-prime
      * using the Euclidean algorithm.
      * 
-     * @param string $a The first number to compare.
-     * @prarm string $b The second number to compare.
+     * @param  string $a  The first number to compare.
+     * @prarm  string $b  The second number to compare.
      * @return string     The result of the determination.
      */
     function coprime($a, $b)
@@ -1230,5 +1324,4 @@ class RichArbitraryPrecisionIntegerMath
 
         return 'false' . "\r\n";
     }
-
 }
