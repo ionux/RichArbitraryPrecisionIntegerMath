@@ -7,7 +7,6 @@
  *   use in a production environment!
  */
 
-
 class RichArbitraryPrecisionIntegerMath
 {
     private $internal      = false;
