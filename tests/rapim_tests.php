@@ -22,8 +22,8 @@ class RapimTest extends \PHPUnit_Framework_TestCase
     {
         // The 'true' option forces the use of our PHP math functions
         // as opposed to the class using GMP or BC math extentions.
-        $this->math = new RichArbitraryPrecisionIntegerMath(true);
-        
+        $this->math = new Math(true);
+
         // The $inputs array consists of 25 pairs of randomly generated
         // numbers (50 numbers total: 25 for $a and 25 for $b).
         $this->inputs = array(
