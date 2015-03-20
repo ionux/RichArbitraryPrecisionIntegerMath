@@ -6,7 +6,10 @@
  *   This class is in ALPHA status and may not work correctly. Do not
  *   use in a production environment!
  */
-class RichArbitraryPrecisionIntegerMath
+
+namespace RAPIM;
+
+class Math
 {
     private $internal      = false;
     private $a_orig_size   = 0;
