@@ -92,7 +92,7 @@ class RapimTest extends \PHPUnit_Framework_TestCase
         // specified math operations using our native code, BC and GMP.
         for ($x = 0; $x < 25; $x++) {
 
-            $native_result  = $math->mul($this->inputs['a'][$x], $this->inputs['b'][$x]);
+            $native_result  = $this->math->mul($this->inputs['a'][$x], $this->inputs['b'][$x]);
             $bcmath_result  = bcmul($this->inputs['a'][$x], $this->inputs['b'][$x]);
             $gmpmath_result = gmp_strval(gmp_mul($this->inputs['a'][$x], $this->inputs['b'][$x]));
 
