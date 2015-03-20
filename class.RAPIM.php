@@ -236,7 +236,7 @@ class RichArbitraryPrecisionIntegerMath
         }
     }
 
-   /**
+    /**
      * Library implementation for multiplying two numbers
      *
      * @param string $x The first number
@@ -772,7 +772,7 @@ class RichArbitraryPrecisionIntegerMath
         }
     }
 
-   /**
+    /**
      * Library implementation for multiplying two numbers
      *
      * @param string $x The first number
@@ -949,9 +949,7 @@ class RichArbitraryPrecisionIntegerMath
                     case 'GMP':
                         $hex = gmp_init($hex);
                         while (gmp_cmp($hex, $this->gmpZero) > 0) {
-                            $dv     = gmp_div_q($hex, $this->gmpFiveEight, GMP_ROUND_ZERO);
-                            $rem    = gmp_strval(gmp_div_r($hex, $this->gmpFiveEight, GMP_ROUND_ZERO));
-                            $hex    = $dv;
+                            list ($hex, $rem) = gmp_div_qr($hex, $this->gmpFiveEight, GMP_ROUND_ZERO);
                             $result = $result . $chars[$rem];
                         }
                         break;
@@ -1244,7 +1242,7 @@ class RichArbitraryPrecisionIntegerMath
         }
     }
 
-    /**    
+    /**
      * Binary Calculator implementation of GMP's inverse
      * modulo function, where ax = 1(mod p).
      *
@@ -1287,7 +1285,7 @@ class RichArbitraryPrecisionIntegerMath
     /**
      * Determines if two numbers are co-prime
      * using the Euclidean algorithm.
-     * 
+     *
      * @param  string $a  The first number to compare.
      * @prarm  string $b  The second number to compare.
      * @return string     The result of the determination.
@@ -1310,7 +1308,7 @@ class RichArbitraryPrecisionIntegerMath
 
             if (bccomp($a, $b) == 0) {
                 $small = $a;
-                $diff  = bcmod($b, $a); 
+                $diff  = bcmod($b, $a);
             }
 
             $a = $small;
