@@ -1,7 +1,7 @@
 <?php
 /**
  *   Rich Arbitrary Precision Integer Mathematics Library for PHP
- *   (c) 2014-2017, Rich Morgan <rich@richmorgan.me>
+ *   (c) 2014-2018, Rich Morgan <rich@richmorgan.me>
  *
  *   This class is in BETA status and may not work correctly. Do not
  *   use in a production environment!
