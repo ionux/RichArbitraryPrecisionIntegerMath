@@ -60,7 +60,7 @@ This open source project is released under the [MIT license](http://opensource.o
 ## License
 
 ```
-  Copyright (c) 2014-2020 Rich Morgan, rich@richmorgan.me
+  Copyright (c) 2014-2023 Rich Morgan, rich@richmorgan.me
 
   The MIT License (MIT)
 
